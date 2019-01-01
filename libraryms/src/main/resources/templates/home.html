@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org"  xmlns:sec="http://www.thymeleaf.org/extras/spring-security5" lang="en">
  <head>
 
     <meta charset="utf-8">
@@ -14,7 +14,8 @@
 
     <link rel="stylesheet" th:href="@{/css/heroic-features.css}"
 	href="../../css/heroic-features.css" />
-
+    <link rel="stylesheet" th:href="@{/css/app.css}"
+	href="../../css/app.css" />  
   </head>
 
   <body>
@@ -23,29 +24,60 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <div class="container">
         <a class="navbar-brand" href="#">Ottawa Library System</a>
+       
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
+        
         <div class="collapse navbar-collapse" id="navbarResponsive">
+        
           <ul class="navbar-nav ml-auto">
-            <li class="nav-item active">
-              <a class="nav-link" href="#">Home
-                <span class="sr-only">(current)</span>
+           <li class="nav-item active">
+              <a class="nav-link" href="/">Home
+              <span class="sr-only">(current)</span>
               </a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">About</a>
+            <li sec:authorize="hasAuthority('admin')">
+            	<a class="nav-link" href="/admin/sections">Sections
+            	<span class="sr-only">(current)</span>
+            	</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Services</a>
+            <li sec:authorize="hasAuthority('admin')">
+            	<a class="nav-link" href="/admin/books">Books
+            	<span class="sr-only">(current)</span>
+            	</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Contact</a>
+            <li sec:authorize="hasAuthority('admin')">
+            	<a class="nav-link" href="/users">Users
+            	<span class="sr-only">(current)</span>
+            	</a>
+            </li>
+            <li sec:authorize="hasAuthority('admin')">
+            	<a class="nav-link" href="/admin/issue">Issue
+            	<span class="sr-only">(current)</span>
+            	</a>
+            </li>
+            <li sec:authorize="hasAuthority('admin')">
+            	<a class="nav-link" href="/admin/lost/copies">Lost Copies
+            	<span class="sr-only">(current)</span>
+            	</a>
             </li>
           </ul>
+          
         </div>
-      </div>
-    </nav>
+ <form class="navbar-form navbar-left" action="/admin/searchBooks">
+  <div class="input-group">
+    <input type="text" id="bookName" name="bookName" class="form-control" placeholder="Search">
+    <div class="input-group-btn">
+    </div>
+  </div>
+</form>
+ <span class="nav-link" sec:authorize="isAuthenticated()">
+                | <span  sec:authentication="name"></span> |
+                <a th:href="@{/logout}"> Sign Out</a>
+            </span>
+ </div>
+</nav>
 
     <!-- Page Content -->
     <div class="container">
@@ -54,68 +86,30 @@
       <header class="jumbotron my-4">
         <h1 class="display-3">A Warm Welcome!</h1>
         <p class="lead">
-Find thousands of books to read. Discover and read free books by indie authors as well as tons of classic books. Browse categories to find your favorite literature genres: Romance, Fantasy, Thriller, Short Stories, Young Adult and Children’s Books… There are Books for everyone..</p>
-        <a href="#" class="btn btn-primary btn-lg">Call to action!</a>
+Find thousands of books to read. Discover and read free books by renowned authors as well as tons of classic books. Browse categories to find your favorite literature genres: Romance, Fantasy, Thriller, Short Stories, Young Adult and Children’s Books… There are Books for everyone..</p>
+        <a href="/search" class="btn btn-primary btn-lg">Search Now</a>
+      	<span>Or check our featured books below</span>
       </header>
 
       <!-- Page Features -->
       <div class="row text-center">
 
-        <div class="col-lg-3 col-md-6 mb-4">
+            <div th:each="book : ${books}" class="col-lg-3 col-md-6 mb-4">
           <div class="card">
-            <img class="card-img-top" src="http://placehold.it/500x325" alt="">
+          <p class="card-text" th:text="'ISBN : ' + ${book.isbn}"></p>
+            <!-- img class="card-img-top" src="http://placehold.it/500x325" alt="">  -->
             <div class="card-body">
-              <h4 class="card-title">Card title</h4>
-              <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente esse necessitatibus neque.</p>
+              <h4 class="card-title" th:text="${book.bookName}"></h4>
+              <p class="card-text" th:text="${book.description}"></p>
             </div>
             <div class="card-footer">
-              <a href="#" class="btn btn-primary">Find Out More!</a>
+              <a href="#" class="btn btn-primary">More Details!</a>
             </div>
           </div>
         </div>
-
-        <div class="col-lg-3 col-md-6 mb-4">
-          <div class="card">
-            <img class="card-img-top" src="http://placehold.it/500x325" alt="">
-            <div class="card-body">
-              <h4 class="card-title">Card title</h4>
-              <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo magni sapiente, tempore debitis beatae culpa natus architecto.</p>
-            </div>
-            <div class="card-footer">
-              <a href="#" class="btn btn-primary">Find Out More!</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-3 col-md-6 mb-4">
-          <div class="card">
-            <img class="card-img-top" src="http://placehold.it/500x325" alt="">
-            <div class="card-body">
-              <h4 class="card-title">Card title</h4>
-              <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente esse necessitatibus neque.</p>
-            </div>
-            <div class="card-footer">
-              <a href="#" class="btn btn-primary">Find Out More!</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-3 col-md-6 mb-4">
-          <div class="card">
-            <img class="card-img-top" src="http://placehold.it/500x325" alt="">
-            <div class="card-body">
-              <h4 class="card-title">Card title</h4>
-              <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo magni sapiente, tempore debitis beatae culpa natus architecto.</p>
-            </div>
-            <div class="card-footer">
-              <a href="#" class="btn btn-primary">Find Out More!</a>
-            </div>
-          </div>
-        </div>
-
-      </div>
       <!-- /.row -->
 
+    </div>
     </div>
     <!-- /.container -->
 
