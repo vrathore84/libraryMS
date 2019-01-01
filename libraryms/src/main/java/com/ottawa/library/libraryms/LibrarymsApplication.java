@@ -17,7 +17,7 @@ public class LibrarymsApplication {
 	private static final Logger LOGGER = LoggerFactory.getLogger(LibrarymsApplication.class);
 	
 	public static void main(String[] args) {
-		LOGGER.info("Entered  Application...");
+		LOGGER.info("Entering Ottawa Library Management Application...");
 		SpringApplication.run(LibrarymsApplication.class, args);
 	}
 	
