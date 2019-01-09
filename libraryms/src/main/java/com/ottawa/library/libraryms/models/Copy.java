@@ -4,6 +4,8 @@ import java.sql.Timestamp;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
 @Table(name = "copies")
@@ -14,10 +16,12 @@ public class Copy {
 	@Column(name="copy_id")
     private Long copyId;
 	
+	@JsonIgnore
  	@ManyToOne
     @JoinColumn(name="book_id", nullable=false)
 	private Book book;
  	
+	
  	@OneToOne
  	@JoinColumn(name="slot_id")
  	private Slot slot;

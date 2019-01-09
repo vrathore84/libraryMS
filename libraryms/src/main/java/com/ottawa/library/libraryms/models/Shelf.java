@@ -14,6 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "shelfs")
 public class Shelf {
@@ -26,11 +28,13 @@ public class Shelf {
 	@Column(name="shelf_name")
 	private String shelfName;
 	
- 	@ManyToOne
+	@JsonIgnore
+	@ManyToOne
     @JoinColumn(name="section_id", nullable=false)
     private Section section;
  	
- 	 @OneToMany(mappedBy="shelf",fetch=FetchType.EAGER)
+ 	@JsonIgnore
+	@OneToMany(mappedBy="shelf",fetch=FetchType.EAGER)
  	 private Set<Layer> layers;
  		
  	

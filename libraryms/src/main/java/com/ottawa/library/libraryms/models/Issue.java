@@ -34,6 +34,9 @@ public class Issue {
 
 	@Column(name="return_date")
 	private Timestamp returnDate;
+	
+	@Column(name="is_returned")
+	private String isReturned;
 
 	@Column(name="created_at")
 	private Timestamp createdAt;
@@ -79,6 +82,14 @@ public class Issue {
 
 	public void setReturnDate(Timestamp returnDate) {
 		this.returnDate = returnDate;
+	}
+
+	public String getIsReturned() {
+		return isReturned;
+	}
+
+	public void setIsReturned(String isReturned) {
+		this.isReturned = isReturned;
 	}
 
 	public Timestamp getCreatedAt() {

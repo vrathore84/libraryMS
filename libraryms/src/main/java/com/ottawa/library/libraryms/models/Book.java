@@ -5,6 +5,8 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
 @Table(name = "books")
@@ -24,7 +26,8 @@ public class Book {
 	@Column(name="description")
 	private String description;
 
-	 @OneToMany(mappedBy="book", fetch=FetchType.EAGER)
+	//@JsonIgnore
+	@OneToMany(mappedBy="book", fetch=FetchType.EAGER)
 	 private Set<Copy> copies;
 
 	@Column(name="is_deleted")

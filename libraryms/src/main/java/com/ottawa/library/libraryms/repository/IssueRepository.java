@@ -9,16 +9,19 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ottawa.library.libraryms.models.Copy;
 import com.ottawa.library.libraryms.models.Issue;
 
 @Transactional
 @Repository
 public interface IssueRepository extends JpaRepository<Issue, Long> {
 	
-	    @Query("SELECT i FROM Issue i WHERE i.issueDate > :sixMonthBack ")
+	    @Query("SELECT i FROM Issue i WHERE i.issueDate > :sixMonthBack and i.isReturned = 'F'")
 	    List<Issue> findAllIssuesSixBack(@Param("sixMonthBack") Timestamp sixMonthBack);
 	  	
-	    @Query("SELECT i FROM Issue i WHERE i.issueDate < :sixMonthBack ")
+	    @Query("SELECT i FROM Issue i WHERE i.issueDate < :sixMonthBack and i.isReturned = 'F'")
 	    List<Issue> findLostBooks(@Param("sixMonthBack") Timestamp sixMonthBack);
+	    
+	    List<Issue>  findByCopy(Copy copy);
 
 	}

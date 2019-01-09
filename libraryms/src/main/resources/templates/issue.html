@@ -11,10 +11,13 @@
     <!-- Bootstrap core JavaScript -->
     <script src="../../js/jquery/jquery.min.js"></script>
     <script src="../../js/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../../js/bootstrap/js/bootstrap-datepicker.min.js"></script>
+    
     
 	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <!-- Bootstrap core CSS -->
     <link th:href="@{/js/bootstrap/css/bootstrap.min.css}" href="../../js/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/js/bootstrap/css/bootstrap-datepicker.standalone.min.css}" href="../../js/bootstrap/css/bootstrap-datepicker.standalone.min.css" rel="stylesheet">
 
     <link rel="stylesheet" th:href="@{/css/heroic-features.css}"
 	href="../../css/heroic-features.css" />
@@ -22,7 +25,41 @@
 	href="../../css/app.css" />  
 	<script type="text/javascript">
 $(document).ready(function(){
-	$(document).ready(function(){
+	
+	$( ".open-edit" ).click(function(){
+		var issueId = $(this).data('issueid');
+		$('#issueId').val(issueId);
+		var bookName  =$(this).data('bookname');
+		var userName = $(this).data('username');
+		$('#bookNameIssue').val(bookName);
+		$.getJSON('/admin/issue/details', {
+			issueId : issueId
+		}, function(data) {
+			$('#copyIdIssue').val(data.issue.copy.copyId);
+			var select = $('#userDropdown');
+			select.find('option').remove();
+			$.each(data.users, function(key, value) {
+				$('<option>').val(value.userId).text(value.username).appendTo(select);
+			});
+		});
+		
+	});
+	
+	
+		$('.datepicker').datepicker({
+		    format: 'mm/dd/yyyy',
+		    startDate: '-3d'
+		});
+		
+		$('#issuedate').on('changeDate', function(ev){
+		    $(this).datepicker('hide');
+		});
+		
+		$('#returndate').on('changeDate', function(ev){
+		    $(this).datepicker('hide');
+		});
+
+		
 		// Activate tooltip
 		$('[data-toggle="tooltip"]').tooltip();
 		
@@ -128,10 +165,10 @@ $(document).ready(function(){
 					  </div>
 					</form>
 					</div>				
-					<div class="col-sm-6">
-						<a href="#addIssueModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Issue Book</span></a>
+					<!-- div class="col-sm-6">
+						<a href="#editIssueModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Issue Book</span></a>
 						<a href="#deleteIssueModal" class="btn btn-danger" data-toggle="modal"><i class="material-icons">&#xE15C;</i> <span>Return Book</span></a>						
-					</div>
+					</div> -->
                 </div>
             </div>
             <table class="table table-striped table-hover">
@@ -169,8 +206,7 @@ $(document).ready(function(){
                         <td th:text="${issue.issueDate}"></td>
                         <td th:text="${issue.returnDate}"></td>
                         <td>
-                            <a href="#editIssuenModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-                            <a href="#deleteIssueModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
+                            <a href="#editIssueModal" th:data-username="${issue.user.username}"  th:data-issueId="${issue.issueId}" th:data-bookname="${issue.copy.book.bookName}" class="open-edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
                         </td>
                     </tr>
                      
@@ -179,7 +215,64 @@ $(document).ready(function(){
         </div>
 </div>
     <!-- /.container -->
-
+    	<div id="editIssueModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form action="/admin/editIssue/books" method="POST">
+					<div class="modal-header">						
+						<h4 class="modal-title">Edit Issue</h4>
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					</div>
+					<div class="modal-body">
+						<input type="hidden" id="issueId" name="issueId" />
+						<div class="row">					
+						<div  class="form-group col-md-6">
+							<label>Book Name</label>
+							<input name="bookNameIssue" disabled id="bookNameIssue" type="text"  class="form-control" required>
+						</div>
+						<div class="form-group col-md-6">
+							<label>Copy ID</label>
+							<input name="copyIdIssue" disabled id="copyIdIssue" type="text"  class="form-control" required>
+						</div>
+						</div>
+						<div class="form-group">
+							<label>Select User</label>
+							<select id="userDropdown" name="userId"  class="form-control">
+							    <option>Select User</option>
+							</select>
+						</div>
+						<div class="row">
+							<div  class="form-group col-md-6">
+								<label>Issue Date</label>
+								<div id="issuedate" class="input-group date" data-provide="datepicker">
+								    <input name="issueDateV" id="issueDateV" type="text" class="form-control">
+								    <div class="input-group-addon">
+								        <span class="glyphicon glyphicon-th"></span>
+								    </div>
+								</div>
+							</div>
+							<div  class="form-group col-md-6">
+								<label>Return Date</label>
+								<div id="returndate" class="input-group date" data-provide="datepicker">
+								    <input name="returnDateV" id="returnDateV" type="text" class="form-control">
+								    <div class="input-group-addon">
+								        <span class="glyphicon glyphicon-th"></span>
+								    </div>
+								</div>							
+							</div>
+						
+						</div>
+										
+					</div>
+					<div class="modal-footer">
+						<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+						<input type="submit" class="btn btn-success" value="Edit">
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+    
     <!-- Footer -->
     <footer class="py-5 bg-dark">
       <div class="container">

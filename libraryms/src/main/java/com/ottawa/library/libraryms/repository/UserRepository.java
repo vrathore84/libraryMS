@@ -8,6 +8,6 @@ import com.ottawa.library.libraryms.models.User;
 
 @Transactional
 @Repository
-public interface UserRepository extends JpaRepository<User, String> {
+public interface UserRepository extends JpaRepository<User, Long> {
 	User findByUsername(String username);
 }

@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "slots")
 public class Slot {
@@ -23,7 +25,8 @@ public class Slot {
 	@Column(name="slot_name")
 	private String slotName;
 	
- 	@ManyToOne
+ 	@JsonIgnore
+	@ManyToOne
     @JoinColumn(name="layer_id", nullable=false)
     private Layer layer;
  	
